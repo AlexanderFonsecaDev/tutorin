@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Study;
+use App\Models\Study;
 use Illuminate\Http\Request;
 
 class StudyController extends Controller

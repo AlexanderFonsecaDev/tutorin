@@ -3,63 +3,50 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Pqr;
+use App\Models\Pqr;
 use Illuminate\Http\Request;
+use App\Http\Requests\PqrStoreRequest;
+use App\Http\Requests\PqrUpdateRequest;
+use App\Http\Resources\Pqr as PqrResource;
+use App\Http\Resources\PqrCollection;
 
 class PqrController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    protected $pqr;
+
+    public function __construct(Pqr $pqr)
+    {
+        $this->pqr = $pqr;
+    }
+
     public function index()
     {
-        //
+        return response()->json(new PqrCollection(
+            $this->pqr->orderBy('id','desc')->get()
+        ));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(PqrStoreRequest $request)
     {
-        //
+        $pqr = $this->pqr->create($request->all());
+        return response()->json(new PqrResource($pqr), 201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Pqr  $pqr
-     * @return \Illuminate\Http\Response
-     */
     public function show(Pqr $pqr)
     {
-        //
+        return response()->json(new PqrResource($pqr), 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Pqr  $pqr
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Pqr $pqr)
+    public function update(PqrUpdateRequest $request, $id)
     {
-        //
+        $pqr = $this->pqr->find($id);
+        $pqr->update($request->all());
+        return response()->json(new PqrResource($pqr), 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Pqr  $pqr
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Pqr $pqr)
     {
-        //
+        $pqr->delete();
+        return response()->json(null, 204);
     }
 }

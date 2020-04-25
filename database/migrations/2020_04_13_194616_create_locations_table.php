@@ -14,7 +14,18 @@ class CreateLocationsTable extends Migration
     public function up()
     {
         Schema::create('locations', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
+
+            $table->bigInteger('profile_id')->unsigned();
+
+            $table->string('address');
+            $table->string('state');
+            $table->string('city');
+
+            $table->foreign('profile_id')->references('id')->on('profiles')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+
             $table->timestamps();
         });
     }

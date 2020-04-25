@@ -3,11 +3,16 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Image;
 use App\Providers\RouteServiceProvider;
 use App\User;
+use Carbon\Carbon;
+use DateTime;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Ramsey\Uuid\Type\Integer;
 
 class RegisterController extends Controller
 {
@@ -44,7 +49,7 @@ class RegisterController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param array $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
@@ -59,15 +64,25 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param array $data
      * @return \App\User
      */
     protected function create(array $data)
     {
-        return User::create([
+
+        $data_birthday = $data['birthday'];
+        $birthday = Carbon::parse($data_birthday);
+
+        User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'birthday' => $birthday,
+            'gender' => $data['gender'],
+            'phonenumber' => $data['phonenumber'],
+            'mobile' => $data['mobile'],
+            'active' => $data['active'],
+            'admin' => $data['admin'],
         ]);
     }
 }

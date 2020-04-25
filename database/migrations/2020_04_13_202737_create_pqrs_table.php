@@ -14,8 +14,18 @@ class CreatePqrsTable extends Migration
     public function up()
     {
         Schema::create('pqrs', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
+
+            $table->bigInteger('user_id')->unsigned();
+            $table->string('title');
+            $table->text('description');
+            $table->enum('status', ['REQUEST', 'NAGGING','CLAIM'])->default('REQUEST');
+
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
         });
     }
 

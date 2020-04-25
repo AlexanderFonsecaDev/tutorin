@@ -3,63 +3,50 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Tag;
+use App\Models\Tag;
 use Illuminate\Http\Request;
+use App\Http\Requests\TagStoreRequest;
+use App\Http\Requests\TagUpdateRequest;
+use App\Http\Resources\Tag as TagResource;
+use App\Http\Resources\TagCollection;
 
 class TagController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    protected $tag;
+
+    public function __construct(Tag $tag)
+    {
+        $this->tag = $tag;
+    }
+
     public function index()
     {
-        //
+        return response()->json(new TagCollection(
+            $this->tag->orderBy('id','desc')->get()
+        ));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(TagStoreRequest $request)
     {
-        //
+        $tag = $this->tag->create($request->all());
+        return response()->json(new TagResource($tag), 201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Tag  $tag
-     * @return \Illuminate\Http\Response
-     */
     public function show(Tag $tag)
     {
-        //
+        return response()->json(new TagResource($tag), 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Tag  $tag
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Tag $tag)
+    public function update(TagUpdateRequest $request, $id)
     {
-        //
+        $tag = $this->tag->find($id);
+        $tag->update($request->all());
+        return response()->json(new TagResource($tag), 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Tag  $tag
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Tag $tag)
     {
-        //
+        $tag->delete();
+        return response()->json(null, 204);
     }
 }

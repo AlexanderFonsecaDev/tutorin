@@ -14,8 +14,19 @@ class CreateResultsTable extends Migration
     public function up()
     {
         Schema::create('results', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
+
+            $table->bigInteger('offer_id')->unsigned();
+
+
+            $table->text('description');
+            $table->integer('qualification')->default(0);
+
             $table->timestamps();
+
+            $table->foreign('offer_id')->references('id')->on('offers')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
         });
     }
 

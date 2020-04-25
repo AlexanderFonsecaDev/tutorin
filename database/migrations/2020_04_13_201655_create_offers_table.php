@@ -14,7 +14,12 @@ class CreateOffersTable extends Migration
     public function up()
     {
         Schema::create('offers', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
+
+            $table->text('description');
+            $table->double('price');
+            $table->enum('status', ['PUBLISHED', 'DISMISSED'])->default('PUBLISHED');
+
             $table->timestamps();
         });
     }

@@ -2,64 +2,51 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Group;
+use App\Models\Group;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\GroupStoreRequest;
+use App\Http\Requests\GroupUpdateRequest;
+use App\Http\Resources\Group as GroupResource;
+use App\Http\Resources\GroupCollection;
 
 class GroupController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    protected $group;
+
+    public function __construct(Group $group)
+    {
+        $this->group = $group;
+    }
+
     public function index()
     {
-        //
+        return response()->json(new GroupCollection(
+            $this->group->orderBy('id','desc')->get()
+        ));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(GroupStoreRequest $request)
     {
-        //
+        $group = $this->group->create($request->all());
+        return response()->json(new GroupResource($group), 201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Group  $group
-     * @return \Illuminate\Http\Response
-     */
     public function show(Group $group)
     {
-        //
+        return response()->json(new GroupResource($group), 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Group  $group
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Group $group)
+    public function update(GroupUpdateRequest $request, $id)
     {
-        //
+        $group = $this->group->find($id);
+        $group->update($request->all());
+        return response()->json(new GroupResource($group), 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Group  $group
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Group $group)
     {
-        //
+        $group->delete();
+        return response()->json(null, 204);
     }
 }

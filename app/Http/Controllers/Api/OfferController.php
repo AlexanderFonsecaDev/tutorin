@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Offer;
+use App\Models\Offer;
 use Illuminate\Http\Request;
 
 class OfferController extends Controller
