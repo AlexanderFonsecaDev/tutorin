@@ -19,6 +19,7 @@ class Pqr extends JsonResource
             'user_id'    => $this->user_id,
             'title'      => $this->title,
             'description'=> $this->description,
+            'status'     => $this->status,
             'created'    => $this->created_at->diffForHumans(),
             'created_at' => $this->created_at->format('d-m-y'),
         ];

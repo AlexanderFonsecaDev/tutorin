@@ -31,53 +31,19 @@ class ProfileController extends Controller
 
     public function store(ProfileStoreRequest $request)
     {
-        $user_profile =  User::find($request->user_id);
-
-        if ($request->hasFile('avatar')) {
-            $exploded = explode(',', $request->avatar);
-            $decoded = base64_decode($exploded[1]);
-            if(str_contains($exploded[0],'jpeg'))
-                $extension = 'jpg';
-            else
-                $extension = 'png';
-
-            $filename = str_random() . '.' . $extension;
-            $path = public_path().'/avatar/'.$filename;
-            file_put_contents($path,$decoded);
-            $user_profile->profile()->image()->save(Image::make(['url' => $filename]));
-        }
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param \App\Profile $profile
-     * @return \Illuminate\Http\Response
-     */
     public function show(Profile $profile)
     {
         return response()->json(new ProfileResource($profile), 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Profile $profile
-     * @return \Illuminate\Http\Response
-     */
     public function update(ProfileUpdateRequest $request, $id)
     {
         $profile = $this->profile->find($id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param \App\Profile $profile
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Profile $profile)
     {
         //

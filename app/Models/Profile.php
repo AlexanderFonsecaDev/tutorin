@@ -33,12 +33,12 @@ class Profile extends Model
     }
 
     public function categories(){
-        return $this->belongsToMany(Category::class);
+        return $this->belongsToMany(Category::class)->withTimestamps();
     }
 
     public function files()
     {
-        return $this->morphToMany(File::class, 'fileable');
+        return $this->morphToMany(File::class, 'fileable')->withTimestamps();
     }
 
     public function image()

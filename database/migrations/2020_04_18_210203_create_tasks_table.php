@@ -19,6 +19,7 @@ class CreateTasksTable extends Migration
             $table->bigInteger('user_id')->unsigned();
             $table->bigInteger('category_id')->unsigned();
 
+            $table->string('name', 128);
             $table->mediumText('excerpt')->nullable();
             $table->text('body');
             $table->double('price')->default(0);

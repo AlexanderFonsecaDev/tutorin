@@ -29,7 +29,8 @@ class UserController extends Controller
     public function index()
     {
         return response()->json(new UserCollection(
-            $this->user->orderBy('id', 'desc')->get()
+            $this->user->where('admin','=',1)
+                       ->orderByDesc('id')->get()
         ));
     }
 
@@ -96,6 +97,30 @@ class UserController extends Controller
             'mobile' => $request->input('mobile'),
             'active' => $request->input('active'),
         ]);
+
+        if ($request->input('avatar') != '') {
+            $exploded = explode(',', $request->avatar);
+            $decoded = base64_decode($exploded[1]);
+
+            if (Str::contains($exploded[0], 'jpeg')) {
+                $extension = 'jpg';
+            } else {
+                $extension = 'png';
+            }
+
+            $fileName = Str::random() . '.' . $extension;
+            $path = public_path() . '/avatar/' . $fileName;
+            file_put_contents($path,$decoded);
+
+            $user->image()->update([
+                'url' => 'avatar/'.$fileName
+            ]);
+        } else {
+            $user->image()->update([
+                'url' => 'avatar/default.png'
+            ]);
+        }
+
         return response()->json(new UserResource($userDB), 200);
     }
 

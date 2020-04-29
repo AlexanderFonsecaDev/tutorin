@@ -37,18 +37,22 @@ class DatabaseSeeder extends Seeder
         factory(App\Models\Tag::class, 30)->create();
         factory(App\Models\Category::class, 20)->create();
 
-        factory(App\User::class,20)->create()->each(function ($user){
+        factory(App\User::class,40)->create()->each(function ($user){
             $profile = $user->profile()->save(factory(App\Models\Profile::class)->make());
             $profile->location()->save(factory(App\Models\Location::class)->make());
             $user->image()->save(factory(App\Models\Image::class)->make([
                 'url' => 'avatar/default.png'
             ]));
-
             $profile->categories()->attach($this->array(rand(1, 5)));
             $user->groups()->attach([1]);
 
         });
 
+        factory(App\Models\Task::class, 300)->create()->each(function(App\Models\Task $task) {
+            $task->tags()->attach($this->array(rand(1, 30)));
+        });
+
+        factory(App\Models\Pqr::class, 40)->create();
 
     }
 

@@ -14,11 +14,11 @@ class Comment extends Model
 
     public function commentable()
     {
-        return $this->morphTo();
+        return $this->morphTo()->withTimestamps();
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class); //user_id
+        return $this->belongsTo(User::class);
     }
 }
